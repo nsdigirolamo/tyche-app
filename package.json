@@ -12,8 +12,8 @@
   },
   "lint-staged": {
     "*": [
-      "eslint .",
-      "prettier --write ."
+      "npx eslint .",
+      "npx prettier --write ."
     ]
   },
   "dependencies": {
