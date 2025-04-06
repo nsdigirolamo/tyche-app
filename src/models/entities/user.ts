@@ -1,17 +1,15 @@
 import { UserOutput } from "../dtos/user";
 
 export class User {
-  id: string;
-  username: string;
+  name: string;
   createdAt: Date;
 
-  constructor(id: string, username: string, createdAt: Date) {
-    this.id = id;
-    this.username = username;
+  constructor(name: string, createdAt: Date) {
+    this.name = name;
     this.createdAt = createdAt;
   }
 
   static fromUserOutput(output: UserOutput): User {
-    return new User(output.id, output.username, new Date(output.created_at));
+    return new User(output.name, new Date(output.created_at));
   }
 }

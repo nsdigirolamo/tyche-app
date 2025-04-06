@@ -10,7 +10,7 @@ const Login = () => {
 
   const handleCreateClick = async () => {
     const input: UserInput = {
-      username: (Math.random() + 1).toString(36).substring(7),
+      name: (Math.random() + 1).toString(36).substring(7),
       password: (Math.random() + 1).toString(36).substring(7),
     };
     const user = await userRepository.create(input);
@@ -19,9 +19,7 @@ const Login = () => {
   };
 
   const handleReadClick = async () => {
-    const user = await userRepository.read(
-      "8d7aeb29-efb5-476f-89fc-cb57265de940"
-    );
+    const user = await userRepository.read("John_Smith");
 
     setUser(user);
   };

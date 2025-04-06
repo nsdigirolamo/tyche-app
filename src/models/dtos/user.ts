@@ -1,10 +1,9 @@
 export interface UserInput {
-  username: string;
+  name: string;
   password: string;
 }
 
 export interface UserOutput {
-  id: string;
-  username: string;
+  name: string;
   created_at: string;
 }
