@@ -1,13 +1,15 @@
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { User } from "../../models/entities/user";
 import { UserRepository } from "../../repositories/UserRepository";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useState } from "react";
 
 interface RegisterFormProps {
   onSubmit: (user: User) => void;
+  onError: (error: unknown) => void;
 }
 
 interface IRegisterFormInput {
@@ -24,7 +26,9 @@ const RegisterFormSchema = yup.object({
   password: yup.string().required("A password is required."),
 });
 
-const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
+const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
+  const userRepository = new UserRepository(axios);
+
   const {
     formState: { errors },
     handleSubmit,
@@ -33,16 +37,20 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
   } = useForm<IRegisterFormInput>({
     resolver: yupResolver(RegisterFormSchema),
   });
-
-  const userRepository = new UserRepository(axios);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const submitHandler = handleSubmit(async data => {
     const input = { name: data.username, password: data.password };
+    setIsLoading(true);
     try {
       const user = await userRepository.create_one(input);
       onSubmit(user);
+      onError(undefined);
     } catch (error) {
-      console.log(error);
+      onError(error);
+    } finally {
+      reset();
+      setIsLoading(false);
     }
   });
 
@@ -53,9 +61,8 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group className="mb-2">
-        <Form.Label for="username">Username</Form.Label>
+        <Form.Label>Username</Form.Label>
         <Form.Control
-          id="username"
           placeholder="Please enter a username."
           isInvalid={!!errors.username}
           {...register("username")}
@@ -65,9 +72,8 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </Form.Control.Feedback>
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label for="password">Password</Form.Label>
+        <Form.Label>Password</Form.Label>
         <Form.Control
-          id="password"
           placeholder="Please enter a secure password."
           isInvalid={!!errors.password}
           {...register("password")}
@@ -77,7 +83,20 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </Form.Control.Feedback>
       </Form.Group>
       <Button className="me-3" variant="primary" type="submit">
-        Register
+        {!isLoading ? (
+          "Register"
+        ) : (
+          <>
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            <span className="ms-2">Loading...</span>
+          </>
+        )}
       </Button>
       <Button variant="outline-secondary" onClick={handleResetClick}>
         Reset
