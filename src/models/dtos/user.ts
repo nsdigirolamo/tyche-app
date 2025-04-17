@@ -4,6 +4,7 @@ export interface UserInput {
 }
 
 export interface UserOutput {
+  id: string;
   name: string;
   created_at: string;
 }

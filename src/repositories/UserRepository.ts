@@ -2,11 +2,11 @@ import { AxiosInstance } from "axios";
 import { UserInput, UserOutput } from "../models/dtos/user";
 import { User } from "../models/entities/user";
 import { HttpRepository } from "./HttpRepository";
-import { IEntityRepository } from "./IEntityRepository";
 
-export class UserRepository implements IEntityRepository<User> {
+export class UserRepository {
   httpRepository: HttpRepository<UserInput, UserOutput>;
-  endpoint = "http://localhost:8080/user";
+  post_endpoint = "http://localhost:8000/api/user";
+  get_endpoint = "http://localhost:8000/api/users";
 
   constructor(axiosInstance: AxiosInstance) {
     this.httpRepository = new HttpRepository<UserInput, UserOutput>(
@@ -14,30 +14,27 @@ export class UserRepository implements IEntityRepository<User> {
     );
   }
 
-  async create(input: UserInput): Promise<User> {
-    const { data } = await this.httpRepository.post(this.endpoint, input);
+  async create_one(input: UserInput): Promise<User> {
+    const url = `${this.post_endpoint}/register`;
+    const { data } = await this.httpRepository.post(url, input);
     const user = User.fromUserOutput(data);
 
     return user;
   }
 
-  async read(id: string): Promise<User> {
-    const url = `${this.endpoint}/${id}`;
+  async find_one_by_id(user_id: string): Promise<User> {
+    const url = `${this.get_endpoint}/${user_id}`;
     const { data } = await this.httpRepository.get(url);
     const user = User.fromUserOutput(data);
 
     return user;
   }
 
-  async update(id: string, input: UserInput): Promise<User> {
-    const url = `${this.endpoint}/${id}`;
-    const { data } = await this.httpRepository.put(url, input);
+  async find_one_by_name(user_name: string): Promise<User> {
+    const url = `${this.get_endpoint}/${user_name}`;
+    const { data } = await this.httpRepository.get(url);
     const user = User.fromUserOutput(data);
 
     return user;
-  }
-
-  async delete(): Promise<void> {
-    await this.httpRepository.delete(this.endpoint);
   }
 }
