@@ -1,23 +1,23 @@
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { User } from "../../models/entities/user";
-import { UserRepository } from "../../repositories/UserRepository";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
+import { LoginService } from "../../services/LoginService";
+import LoginData from "../../models/login";
 
-interface RegisterFormProps {
-  onSubmit: (user: User) => void;
+interface LoginFormProps {
+  onSubmit: (user: LoginData) => void;
   onError: (error: unknown) => void;
 }
 
-interface IRegisterFormInput {
+interface ILoginFormInput {
   username: string;
   password: string;
 }
 
-const RegisterFormSchema = yup.object({
+const LoginFormSchema = yup.object({
   username: yup
     .string()
     .max(16, "A username cannot be longer than 16 characters.")
@@ -26,25 +26,23 @@ const RegisterFormSchema = yup.object({
   password: yup.string().required("A password is required."),
 });
 
-const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
-  const userRepository = new UserRepository(axios);
+const LoginForm = ({ onSubmit, onError }: LoginFormProps) => {
+  const loginService = new LoginService(axios);
 
   const {
     formState: { errors },
     handleSubmit,
     register,
     reset,
-  } = useForm<IRegisterFormInput>({
-    resolver: yupResolver(RegisterFormSchema),
-  });
+  } = useForm<ILoginFormInput>({ resolver: yupResolver(LoginFormSchema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const submitHandler = handleSubmit(async data => {
     const input = { name: data.username, password: data.password };
     setIsLoading(true);
     try {
-      const user = await userRepository.create_one(input);
-      onSubmit(user);
+      const loginData = await loginService.login(input);
+      onSubmit(loginData);
       onError(undefined);
     } catch (error) {
       onError(error);
@@ -84,7 +82,7 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
       </Form.Group>
       <Button className="me-3" variant="primary" type="submit">
         {!isLoading ? (
-          "Register"
+          "Login"
         ) : (
           <>
             <Spinner
@@ -105,4 +103,4 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

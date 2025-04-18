@@ -1,18 +1,15 @@
 import { Link } from "react-router";
-import RegisterForm from "../components/register/RegisterForm";
-import { User } from "../models/entities/user";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { isAxiosError } from "axios";
+import RegisterForm from "../components/forms/RegisterForm";
 
-const Register = () => {
+const RegisterPage = () => {
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  // @TODO: Redirect to login page when user is not null.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [user, setUser] = useState<User | null>(null);
 
-  const handleSubmit = (user: User) => {
-    setUser(user);
+  const handleSubmit = () => {
+    setIsRegistered(true);
   };
 
   const handleError = (error: unknown) => {
@@ -24,7 +21,7 @@ const Register = () => {
       const response = error.response;
       const newErrorMessage = response
         ? (response.data as string)
-        : "Could not determine a cause :(";
+        : "Could not determine a cause";
       setErrorMessage(
         "Something went wrong registering your account: " +
           newErrorMessage +
@@ -34,7 +31,12 @@ const Register = () => {
     console.log(error);
   };
 
-  return (
+  return isRegistered ? (
+    <Alert variant="success">
+      <span>Your account was successfully registered. Please </span>
+      <Link to="/login">click here and log in.</Link>
+    </Alert>
+  ) : (
     <>
       <h1>Register</h1>
       <RegisterForm onSubmit={handleSubmit} onError={handleError} />
@@ -42,9 +44,11 @@ const Register = () => {
         <span>Already have an account? </span>
         <Link to="/login">Login here.</Link>
       </div>
-      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      <Alert hidden={!errorMessage} variant="danger">
+        {errorMessage}
+      </Alert>
     </>
   );
 };
 
-export default Register;
+export default RegisterPage;

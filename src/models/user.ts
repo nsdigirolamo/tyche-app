@@ -1,6 +1,6 @@
-import { UserOutput } from "../dtos/user";
+import { UserOutput } from "./dtos/user";
 
-export class User {
+class User {
   id: string;
   name: string;
   createdAt: Date;
@@ -12,6 +12,9 @@ export class User {
   }
 
   static fromUserOutput(output: UserOutput): User {
-    return new User(output.id, output.name, new Date(output.created_at));
+    const createdAt = new Date(output.created_at);
+    return new User(output.id, output.name, createdAt);
   }
 }
+
+export default User;

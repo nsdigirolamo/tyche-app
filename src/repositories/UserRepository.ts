@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
 import { UserInput, UserOutput } from "../models/dtos/user";
-import { User } from "../models/entities/user";
 import { HttpRepository } from "./HttpRepository";
+import User from "../models/user";
 
 export class UserRepository {
   httpRepository: HttpRepository<UserInput, UserOutput>;
