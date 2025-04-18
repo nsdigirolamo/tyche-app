@@ -8,19 +8,21 @@ import LoginForm from "../components/forms/LoginForm";
 
 const LoginPage = () => {
   const { login } = useLogin();
-  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = (loginData: LoginData) => {
     login(loginData);
-    setSuccessMessage("You're now logged in.");
+    // @TODO: Send the JWT token back in each request.
+    console.log(loginData);
+    setIsLoggedIn(true);
   };
 
   const handleError = (error: unknown) => {
     if (!error) {
       setErrorMessage("");
     } else {
-      setSuccessMessage("");
+      setIsLoggedIn(false);
     }
 
     if (isAxiosError(error)) {
@@ -37,7 +39,12 @@ const LoginPage = () => {
     console.log(error);
   };
 
-  return (
+  return isLoggedIn ? (
+    <Alert variant="success">
+      <span>You are now logged in. </span>
+      <Link to="/posts">Click here and get posting!</Link>
+    </Alert>
+  ) : (
     <>
       <h1>Login</h1>
       <LoginForm onSubmit={handleSubmit} onError={handleError} />
@@ -45,8 +52,9 @@ const LoginPage = () => {
         <span>Don't have an account? </span>
         <Link to="/register">Register here.</Link>
       </div>
-      {successMessage && <Alert variant="success">{errorMessage}</Alert>}
-      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      <Alert hidden={!errorMessage} variant="danger">
+        {errorMessage}
+      </Alert>
     </>
   );
 };
