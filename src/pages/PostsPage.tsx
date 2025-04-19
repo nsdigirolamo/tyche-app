@@ -1,18 +1,79 @@
-import { Button } from "react-bootstrap";
-import { PostRepository } from "../repositories/PostRepository";
 import { useLoginContext } from "../contexts/login-context";
+import { useEffect, useMemo, useState } from "react";
+import PostView from "../components/views/PostView";
+import Post from "../models/entities/Post";
+import PostForm from "../components/forms/PostForm";
+import { isAxiosError } from "axios";
+import { Link } from "react-router";
+import { Alert } from "react-bootstrap";
+import PostService from "../services/PostsService";
 
 const PostsPage = () => {
-  const { getAxios } = useLoginContext();
-  const postRepository = new PostRepository(getAxios());
+  const { loginData, getAxios } = useLoginContext();
+  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
 
-  const handleClick = async () => {
-    const input = { parent_id: null, body: "Hello world." };
-    const post = await postRepository.create_one(input);
-    console.log(post);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const handleSubmit = (post: Post) => {
+    setPosts([post, ...posts]);
   };
 
-  return <Button onClick={handleClick}>Click Me</Button>;
+  const handleError = (error: unknown) => {
+    if (!error) {
+      setErrorMessage("");
+    }
+
+    if (isAxiosError(error)) {
+      const response = error.response;
+      const newErrorMessage = response
+        ? (response.data as string)
+        : "Could not determine a cause";
+      setErrorMessage(
+        "Something went wrong making your post: " +
+          newErrorMessage +
+          ". Please try again."
+      );
+    } else {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const newPosts = await postService.findManyWithoutParents();
+      setPosts(newPosts);
+    };
+
+    void fetchPosts();
+  }, [postService]);
+
+  return (
+    <>
+      <h1>Posts</h1>
+      <Alert hidden={!errorMessage} variant="danger">
+        {errorMessage}
+      </Alert>
+      {loginData ? (
+        <PostForm onSubmit={handleSubmit} onError={handleError} />
+      ) : (
+        <div className="my-3">
+          <span>Don't have an account? </span>
+          <Link to="/register">Click here to register</Link>
+          <span> or </span>
+          <Link to="/login">click here to login.</Link>
+        </div>
+      )}
+      {posts
+        .sort(
+          (post1, post2) =>
+            post2.createdAt.getTime() - post1.createdAt.getTime()
+        )
+        .map(post => (
+          <PostView className="my-3 p-4" key={post.id} post={post} />
+        ))}
+    </>
+  );
 };
 
 export default PostsPage;

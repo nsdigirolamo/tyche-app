@@ -2,10 +2,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Container } from "react-bootstrap";
 import LoginProvider from "./components/providers/LoginProvider";
-import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PostsPage from "./pages/PostsPage";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (

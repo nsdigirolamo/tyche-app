@@ -5,18 +5,16 @@ import { HttpRepository } from "../repositories/HttpRepository";
 import LoginData from "../models/entities/LoginData";
 
 export class LoginService {
-  httpRepository: HttpRepository<UserInput, LoginOutput>;
-  post_endpoint = "http://localhost:8000/api/user";
+  httpRepository: HttpRepository;
+  postEndpoint = "http://localhost:8000/api/user";
 
-  constructor(axiosInstance: AxiosInstance) {
-    this.httpRepository = new HttpRepository<UserInput, LoginOutput>(
-      axiosInstance
-    );
+  constructor(axios: AxiosInstance) {
+    this.httpRepository = new HttpRepository(axios);
   }
 
   async login(input: UserInput): Promise<LoginData> {
-    const url = `${this.post_endpoint}/login`;
-    const { data } = await this.httpRepository.post(url, input);
+    const url = `${this.postEndpoint}/login`;
+    const { data } = await this.httpRepository.post<LoginOutput>(url, input);
     const loginData = LoginData.fromLoginOutput(data);
 
     return loginData;

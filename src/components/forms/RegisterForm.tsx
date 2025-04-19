@@ -1,11 +1,11 @@
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { UserRepository } from "../../repositories/UserRepository";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { useLoginContext } from "../../contexts/login-context";
 import User from "../../models/entities/User";
+import UserService from "../../services/UserService";
 
 interface RegisterFormProps {
   onSubmit: (user: User) => void;
@@ -28,7 +28,7 @@ const RegisterFormSchema = yup.object({
 
 const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
   const { getAxios } = useLoginContext();
-  const userRepository = new UserRepository(getAxios());
+  const userService = new UserService(getAxios());
 
   const {
     formState: { errors },
@@ -41,10 +41,9 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const submitHandler = handleSubmit(async data => {
-    const input = { name: data.username, password: data.password };
     setIsLoading(true);
     try {
-      const user = await userRepository.create_one(input);
+      const user = await userService.createOne(data.username, data.password);
       onSubmit(user);
       onError(undefined);
     } catch (error) {

@@ -1,33 +1,36 @@
 import { PostOutput } from "../dtos/post.dto";
+import { UserOutput } from "../dtos/user-dto";
+import User from "./User";
 
 class Post {
   id: string;
   parentId: string | null;
-  authorId: string;
+  author: User;
   body: string;
   createdAt: Date;
 
   constructor(
     id: string,
     parentId: string | null,
-    authorId: string,
+    author: User,
     body: string,
     createdAt: Date
   ) {
     this.id = id;
     this.parentId = parentId;
-    this.authorId = authorId;
+    this.author = author;
     this.body = body;
     this.createdAt = createdAt;
   }
 
-  static fromPostOutput(output: PostOutput): Post {
-    const createdAt = new Date(output.created_at);
+  static fromOutputs(postOutput: PostOutput, userOutput: UserOutput): Post {
+    const author = User.fromUserOutput(userOutput);
+    const createdAt = new Date(postOutput.created_at);
     return new Post(
-      output.id,
-      output.parent_id,
-      output.author_id,
-      output.body,
+      postOutput.id,
+      postOutput.parent_id,
+      author,
+      postOutput.body,
       createdAt
     );
   }

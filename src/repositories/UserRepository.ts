@@ -1,40 +1,34 @@
 import { AxiosInstance } from "axios";
 import { UserInput, UserOutput } from "../models/dtos/user-dto";
-import User from "../models/entities/User";
 import { HttpRepository } from "./HttpRepository";
 
 export class UserRepository {
-  httpRepository: HttpRepository<UserInput, UserOutput>;
-  post_endpoint = "http://localhost:8000/api/user";
-  get_endpoint = "http://localhost:8000/api/users";
+  httpRepository: HttpRepository;
+  postEndpoint = "http://localhost:8000/api/user";
+  getEndpoint = "http://localhost:8000/api/users";
 
-  constructor(axiosInstance: AxiosInstance) {
-    this.httpRepository = new HttpRepository<UserInput, UserOutput>(
-      axiosInstance
-    );
+  constructor(axios: AxiosInstance) {
+    this.httpRepository = new HttpRepository(axios);
   }
 
-  async create_one(input: UserInput): Promise<User> {
-    const url = `${this.post_endpoint}/register`;
-    const { data } = await this.httpRepository.post(url, input);
-    const user = User.fromUserOutput(data);
+  async createOne(input: UserInput): Promise<UserOutput> {
+    const url = `${this.postEndpoint}/register`;
+    const { data } = await this.httpRepository.post<UserOutput>(url, input);
 
-    return user;
+    return data;
   }
 
-  async find_one_by_id(user_id: string): Promise<User> {
-    const url = `${this.get_endpoint}/${user_id}`;
-    const { data } = await this.httpRepository.get(url);
-    const user = User.fromUserOutput(data);
+  async findOneById(id: string): Promise<UserOutput> {
+    const url = `${this.getEndpoint}/${id}`;
+    const { data } = await this.httpRepository.get<UserOutput>(url);
 
-    return user;
+    return data;
   }
 
-  async find_one_by_name(user_name: string): Promise<User> {
-    const url = `${this.get_endpoint}/${user_name}`;
-    const { data } = await this.httpRepository.get(url);
-    const user = User.fromUserOutput(data);
+  async findOneByName(name: string): Promise<UserOutput> {
+    const url = `${this.getEndpoint}/${name}`;
+    const { data } = await this.httpRepository.get<UserOutput>(url);
 
-    return user;
+    return data;
   }
 }
