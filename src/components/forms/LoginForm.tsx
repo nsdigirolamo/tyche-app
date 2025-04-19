@@ -1,11 +1,11 @@
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { LoginService } from "../../services/LoginService";
-import LoginData from "../../models/login";
+import LoginData from "../../models/entities/LoginData";
+import { useLoginContext } from "../../contexts/login-context";
 
 interface LoginFormProps {
   onSubmit: (user: LoginData) => void;
@@ -27,7 +27,8 @@ const LoginFormSchema = yup.object({
 });
 
 const LoginForm = ({ onSubmit, onError }: LoginFormProps) => {
-  const loginService = new LoginService(axios);
+  const { getAxios } = useLoginContext();
+  const loginService = new LoginService(getAxios());
 
   const {
     formState: { errors },

@@ -27,8 +27,9 @@ const RegisterPage = () => {
           newErrorMessage +
           ". Please try again."
       );
+    } else {
+      console.log(error);
     }
-    console.log(error);
   };
 
   return isRegistered ? (

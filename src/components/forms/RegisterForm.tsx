@@ -1,11 +1,11 @@
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { UserRepository } from "../../repositories/UserRepository";
-import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
-import User from "../../models/user";
+import { useLoginContext } from "../../contexts/login-context";
+import User from "../../models/entities/User";
 
 interface RegisterFormProps {
   onSubmit: (user: User) => void;
@@ -27,7 +27,8 @@ const RegisterFormSchema = yup.object({
 });
 
 const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
-  const userRepository = new UserRepository(axios);
+  const { getAxios } = useLoginContext();
+  const userRepository = new UserRepository(getAxios());
 
   const {
     formState: { errors },

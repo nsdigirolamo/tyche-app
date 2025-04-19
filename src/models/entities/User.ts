@@ -1,4 +1,4 @@
-import { UserOutput } from "./dtos/user";
+import { UserOutput } from "../dtos/user-dto";
 
 class User {
   id: string;

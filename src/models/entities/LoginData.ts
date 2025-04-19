@@ -1,5 +1,5 @@
-import { LoginOutput } from "./dtos/login";
-import User from "./user";
+import { LoginOutput } from "../dtos/login-dto";
+import User from "./User";
 
 class LoginData {
   user: User;

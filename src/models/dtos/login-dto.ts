@@ -1,4 +1,4 @@
-import { UserOutput } from "./user";
+import { UserOutput } from "./user-dto";
 
 export interface LoginOutput {
   user: UserOutput;

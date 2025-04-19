@@ -1,33 +1,26 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router";
-import Landing from "./pages/Landing";
-import Register from "./pages/Register";
 import { Container } from "react-bootstrap";
-import LoginDataContext from "./contexts/login";
-import useLogin from "./hooks/useLogin";
-import { useMemo } from "react";
-import Login from "./pages/Login";
+import LoginProvider from "./components/providers/LoginProvider";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import PostsPage from "./pages/PostsPage";
 
 function App() {
-  const { loginData, setLoginData } = useLogin();
-
-  const loginContextValue = useMemo(
-    () => ({ loginData, setLoginData }),
-    [loginData, setLoginData]
-  );
-
   return (
-    <LoginDataContext value={loginContextValue}>
+    <LoginProvider>
       <Container className="mt-5">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="register" element={<Register />} />
-            <Route path="login" element={<Login />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="posts" element={<PostsPage />} />
           </Routes>
         </BrowserRouter>
       </Container>
-    </LoginDataContext>
+    </LoginProvider>
   );
 }
 

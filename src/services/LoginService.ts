@@ -1,8 +1,8 @@
 import { AxiosInstance } from "axios";
-import { LoginOutput } from "../models/dtos/login";
-import { UserInput } from "../models/dtos/user";
+import { LoginOutput } from "../models/dtos/login-dto";
+import { UserInput } from "../models/dtos/user-dto";
 import { HttpRepository } from "../repositories/HttpRepository";
-import LoginData from "../models/login";
+import LoginData from "../models/entities/LoginData";
 
 export class LoginService {
   httpRepository: HttpRepository<UserInput, LoginOutput>;

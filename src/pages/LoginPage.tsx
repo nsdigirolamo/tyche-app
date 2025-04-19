@@ -2,19 +2,17 @@ import { Link } from "react-router";
 import { Alert } from "react-bootstrap";
 import { isAxiosError } from "axios";
 import { useState } from "react";
-import useLogin from "../hooks/useLogin";
-import LoginData from "../models/login";
+import LoginData from "../models/entities/LoginData";
 import LoginForm from "../components/forms/LoginForm";
+import { useLoginContext } from "../contexts/login-context";
 
 const LoginPage = () => {
-  const { login } = useLogin();
+  const { setLoginData } = useLoginContext();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = (loginData: LoginData) => {
-    login(loginData);
-    // @TODO: Send the JWT token back in each request.
-    console.log(loginData);
+    setLoginData(loginData);
     setIsLoggedIn(true);
   };
 
@@ -35,8 +33,9 @@ const LoginPage = () => {
           newErrorMessage +
           ". Please try again."
       );
+    } else {
+      console.log(error);
     }
-    console.log(error);
   };
 
   return isLoggedIn ? (
