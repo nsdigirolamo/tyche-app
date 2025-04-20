@@ -41,8 +41,12 @@ const PostsPage = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const newPosts = await postService.findManyWithoutParents();
-      setPosts(newPosts);
+      try {
+        const newPosts = await postService.findManyWithoutParents();
+        setPosts(newPosts);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     void fetchPosts();

@@ -42,6 +42,7 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
 
   const submitHandler = handleSubmit(async data => {
     setIsLoading(true);
+
     try {
       const user = await userService.createOne(data.username, data.password);
       onSubmit(user);

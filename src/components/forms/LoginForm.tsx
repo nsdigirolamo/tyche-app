@@ -41,6 +41,7 @@ const LoginForm = ({ onSubmit, onError }: LoginFormProps) => {
   const submitHandler = handleSubmit(async data => {
     const input = { name: data.username, password: data.password };
     setIsLoading(true);
+
     try {
       const loginData = await loginService.login(input);
       onSubmit(loginData);

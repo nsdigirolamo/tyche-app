@@ -14,7 +14,8 @@ const PostView = ({ className, style, post }: PostViewProps) => {
       <Row className="mb-3">
         <div>@{post.author.name}</div>
         <div style={{ fontSize: "0.70em" }}>
-          {post.createdAt.toDateString()}
+          {post.createdAt.toDateString()} at{" "}
+          {post.createdAt.toLocaleTimeString()}
         </div>
       </Row>
       <Row>

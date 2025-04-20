@@ -31,15 +31,15 @@ const LikeToggle = ({ post }: LikeToggleProps) => {
 
   useEffect(() => {
     const fetchLike = async () => {
-      const newIsLiked = await likeService.findOne(post.id);
-      setIsLiked(newIsLiked);
+      try {
+        const newIsLiked = await likeService.findOne(post.id);
+        setIsLiked(newIsLiked);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    try {
-      if (loginData) void fetchLike();
-    } catch (error) {
-      console.log(error);
-    }
+    if (loginData) void fetchLike();
   }, [likeService, loginData, post.id]);
 
   return (
