@@ -7,9 +7,10 @@ interface PostViewProps {
   className?: string | undefined;
   style?: React.CSSProperties;
   post: Post;
+  isParent: boolean;
 }
 
-const PostView = ({ className, style, post }: PostViewProps) => {
+const PostView = ({ className, style, post, isParent }: PostViewProps) => {
   return (
     <Card className={className} style={style}>
       <Row className="mb-3">
@@ -24,7 +25,7 @@ const PostView = ({ className, style, post }: PostViewProps) => {
       </Row>
       <Row>
         <div>
-          <CommentButton className="me-2" post={post} />
+          {isParent && <CommentButton className="me-2" post={post} />}
           <LikeToggle post={post} />
         </div>
       </Row>

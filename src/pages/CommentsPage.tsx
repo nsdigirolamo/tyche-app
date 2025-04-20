@@ -6,26 +6,25 @@ import { Link, useParams } from "react-router";
 import { isAxiosError } from "axios";
 import { Alert } from "react-bootstrap";
 import PostForm from "../components/forms/PostForm";
-import CommentView from "../components/views/CommentView";
 import NotFoundPage from "./NotFoundPage";
+import PostView from "../components/views/PostView";
 
 type Comment = Post;
 
 const CommentsPage = () => {
-  const { loginData, getAxios } = useLoginContext();
-  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
-
   const { postId } = useParams<{ postId: string }>();
-  const [parentPost, setPost] = useState<Post | null>(null);
+  const { loginData, getAxios } = useLoginContext();
+  const [parentPost, setParentPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
 
   const handleSubmit = (comment: Comment) => {
     setComments([comment, ...comments]);
   };
 
   const handleError = (error: unknown) => {
-    console.log(error);
     if (!error) {
       setErrorMessage("");
       return;
@@ -37,15 +36,15 @@ const CommentsPage = () => {
         ? (response.data as string)
         : "Could not determine a cause";
       setErrorMessage(
-        "Something went wrong retrieving this post: " +
-          newErrorMessage +
-          ". Please try again."
+        "Something went wrong: " + newErrorMessage + ". Please try again."
       );
     } else {
       setErrorMessage(
-        "Something went wrong retrieving this post: Could not determine a cause. Please try again"
+        "Something went wrong: Could not determine a cause. Please try again"
       );
     }
+
+    console.log(error);
   };
 
   useEffect(() => {
@@ -55,8 +54,8 @@ const CommentsPage = () => {
       }
 
       try {
-        const newPost = await postService.findOneById(postId);
-        setPost(newPost);
+        const parentPost = await postService.findOneById(postId);
+        setParentPost(parentPost);
       } catch (error) {
         handleError(error);
         return;
@@ -80,7 +79,7 @@ const CommentsPage = () => {
       <Alert hidden={!errorMessage} variant="danger">
         {errorMessage}
       </Alert>
-      <CommentView className="my-3 p-4" post={parentPost} />
+      <PostView className="my-3 p-4" post={parentPost} isParent={true} />
       {loginData ? (
         <PostForm
           onSubmit={handleSubmit}
@@ -101,7 +100,12 @@ const CommentsPage = () => {
             comment2.createdAt.getTime() - comment1.createdAt.getTime()
         )
         .map(comment => (
-          <CommentView className="my-3 p-4" key={comment.id} post={comment} />
+          <PostView
+            className="my-3 p-4"
+            key={comment.id}
+            post={comment}
+            isParent={false}
+          />
         ))}
     </>
   ) : (

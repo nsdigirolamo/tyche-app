@@ -1,8 +1,7 @@
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState } from "react";
 import { useLoginContext } from "../../contexts/login-context";
 import User from "../../models/entities/User";
 import UserService from "../../services/UserService";
@@ -18,18 +17,11 @@ interface IRegisterFormInput {
 }
 
 const RegisterFormSchema = yup.object({
-  username: yup
-    .string()
-    .max(16, "A username cannot be longer than 16 characters.")
-    .matches(/^[a-zA-Z0-9_]+$/, "A username must be alphanumeric.")
-    .required("A username is required."),
+  username: yup.string().required("A username is required."),
   password: yup.string().required("A password is required."),
 });
 
 const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
-  const { getAxios } = useLoginContext();
-  const userService = new UserService(getAxios());
-
   const {
     formState: { errors },
     handleSubmit,
@@ -38,11 +30,11 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
   } = useForm<IRegisterFormInput>({
     resolver: yupResolver(RegisterFormSchema),
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { getAxios } = useLoginContext();
+
+  const userService = new UserService(getAxios());
 
   const submitHandler = handleSubmit(async data => {
-    setIsLoading(true);
-
     try {
       const user = await userService.createOne(data.username, data.password);
       onSubmit(user);
@@ -51,7 +43,6 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
       onError(error);
     } finally {
       reset();
-      setIsLoading(false);
     }
   });
 
@@ -84,20 +75,7 @@ const RegisterForm = ({ onSubmit, onError }: RegisterFormProps) => {
         </Form.Control.Feedback>
       </Form.Group>
       <Button className="me-3" variant="primary" type="submit">
-        {!isLoading ? (
-          "Register"
-        ) : (
-          <>
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            <span className="ms-2">Loading...</span>
-          </>
-        )}
+        Register
       </Button>
       <Button variant="outline-secondary" onClick={handleResetClick}>
         Reset

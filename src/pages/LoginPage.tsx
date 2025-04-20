@@ -30,13 +30,15 @@ const LoginPage = () => {
         ? (response.data as string)
         : "Could not determine a cause";
       setErrorMessage(
-        "Something went wrong logging into your account: " +
-          newErrorMessage +
-          ". Please try again."
+        "Something went wrong: " + newErrorMessage + ". Please try again."
       );
     } else {
-      console.log(error);
+      setErrorMessage(
+        "Something went wrong. Could not determine a cause. Please try again."
+      );
     }
+
+    console.log(error);
   };
 
   return isLoggedIn ? (

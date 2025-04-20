@@ -13,7 +13,6 @@ interface CommentButtonProps {
 const CommentButton = ({ className, post }: CommentButtonProps) => {
   const { getAxios } = useLoginContext();
   const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
-
   const [commentCount, setCommentCount] = useState<number>(0);
 
   useEffect(() => {

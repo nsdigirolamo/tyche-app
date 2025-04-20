@@ -10,10 +10,10 @@ import PostService from "../services/PostsService";
 
 const PostsPage = () => {
   const { loginData, getAxios } = useLoginContext();
-  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
-
   const [posts, setPosts] = useState<Post[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
 
   const handleSubmit = (post: Post) => {
     setPosts([post, ...posts]);
@@ -22,6 +22,7 @@ const PostsPage = () => {
   const handleError = (error: unknown) => {
     if (!error) {
       setErrorMessage("");
+      return;
     }
 
     if (isAxiosError(error)) {
@@ -30,13 +31,15 @@ const PostsPage = () => {
         ? (response.data as string)
         : "Could not determine a cause";
       setErrorMessage(
-        "Something went wrong making your post: " +
-          newErrorMessage +
-          ". Please try again."
+        "Something went wrong: " + newErrorMessage + ". Please try again."
       );
     } else {
-      console.log(error);
+      setErrorMessage(
+        "Something went wrong: Could not determine a cause. Please try again"
+      );
     }
+
+    console.log(error);
   };
 
   useEffect(() => {
@@ -45,7 +48,7 @@ const PostsPage = () => {
         const newPosts = await postService.findManyWithoutParents();
         setPosts(newPosts);
       } catch (error) {
-        console.log(error);
+        handleError(error);
       }
     };
 
@@ -74,7 +77,12 @@ const PostsPage = () => {
             post2.createdAt.getTime() - post1.createdAt.getTime()
         )
         .map(post => (
-          <PostView className="my-3 p-4" key={post.id} post={post} />
+          <PostView
+            className="my-3 p-4"
+            key={post.id}
+            post={post}
+            isParent={true}
+          />
         ))}
     </>
   );

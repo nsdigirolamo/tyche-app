@@ -1,15 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { Button, Form, Spinner } from "react-bootstrap";
-import { useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { useLoginContext } from "../../contexts/login-context";
 import Post from "../../models/entities/Post";
 import PostService from "../../services/PostsService";
 
 interface PostFormProps {
-  onSubmit?: (post: Post) => void;
-  onError?: (error: unknown) => void;
+  onSubmit: (post: Post) => void;
+  onError: (error: unknown) => void;
   parentId?: string;
 }
 
@@ -26,29 +25,25 @@ const PostFormSchema = yup.object({
 });
 
 const PostForm = ({ onSubmit, onError, parentId }: PostFormProps) => {
-  const { getAxios } = useLoginContext();
   const {
     formState: { errors },
     handleSubmit,
     register,
     reset,
   } = useForm<IPostFormInput>({ resolver: yupResolver(PostFormSchema) });
+  const { getAxios } = useLoginContext();
 
   const postService = new PostService(getAxios());
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const submitHandler = handleSubmit(async data => {
-    setIsLoading(true);
-
     try {
       const post = await postService.createOne(data.body, parentId);
-      if (onSubmit) onSubmit(post);
-      if (onError) onError(undefined);
+      onSubmit(post);
+      onError(undefined);
     } catch (error) {
-      if (onError) onError(error);
+      onError(error);
     } finally {
       reset();
-      setIsLoading(false);
     }
   });
 
@@ -70,20 +65,7 @@ const PostForm = ({ onSubmit, onError, parentId }: PostFormProps) => {
         </Form.Control.Feedback>
       </Form.Group>
       <Button className="me-3" variant="primary" type="submit">
-        {!isLoading ? (
-          "Submit"
-        ) : (
-          <>
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            <span className="ms-2">Loading...</span>
-          </>
-        )}
+        Submit
       </Button>
       <Button variant="outline-secondary" onClick={handleResetClick}>
         Reset
