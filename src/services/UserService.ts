@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import { UserRepository } from "../repositories/UserRepository";
+import UserRepository from "../repositories/UserRepository";
 import User from "../models/entities/User";
 
 class UserService {

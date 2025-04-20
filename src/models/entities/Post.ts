@@ -7,6 +7,7 @@ class Post {
   parentId: string | null;
   author: User;
   body: string;
+  likeCount: number;
   createdAt: Date;
 
   constructor(
@@ -14,12 +15,14 @@ class Post {
     parentId: string | null,
     author: User,
     body: string,
+    likeCount: number,
     createdAt: Date
   ) {
     this.id = id;
     this.parentId = parentId;
     this.author = author;
     this.body = body;
+    this.likeCount = likeCount;
     this.createdAt = createdAt;
   }
 
@@ -31,6 +34,7 @@ class Post {
       postOutput.parent_id,
       author,
       postOutput.body,
+      postOutput.like_count,
       createdAt
     );
   }

@@ -1,34 +1,37 @@
 import { AxiosInstance } from "axios";
 import { UserInput, UserOutput } from "../models/dtos/user-dto";
-import { HttpRepository } from "./HttpRepository";
+import HttpRepository from "./HttpRepository";
 
-export class UserRepository {
+const POST_ENDPOINT = `${import.meta.env.VITE_API_ORIGIN}/user`;
+const GET_ENDPOINT = `${import.meta.env.VITE_API_ORIGIN}/users`;
+
+class UserRepository {
   httpRepository: HttpRepository;
-  postEndpoint = "http://localhost:8000/api/user";
-  getEndpoint = "http://localhost:8000/api/users";
 
   constructor(axios: AxiosInstance) {
     this.httpRepository = new HttpRepository(axios);
   }
 
   async createOne(input: UserInput): Promise<UserOutput> {
-    const url = `${this.postEndpoint}/register`;
+    const url = `${POST_ENDPOINT}/register`;
     const { data } = await this.httpRepository.post<UserOutput>(url, input);
 
     return data;
   }
 
   async findOneById(id: string): Promise<UserOutput> {
-    const url = `${this.getEndpoint}/${id}`;
+    const url = `${GET_ENDPOINT}/${id}`;
     const { data } = await this.httpRepository.get<UserOutput>(url);
 
     return data;
   }
 
   async findOneByName(name: string): Promise<UserOutput> {
-    const url = `${this.getEndpoint}/${name}`;
+    const url = `${GET_ENDPOINT}/${name}`;
     const { data } = await this.httpRepository.get<UserOutput>(url);
 
     return data;
   }
 }
+
+export default UserRepository;

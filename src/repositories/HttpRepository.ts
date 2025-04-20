@@ -1,6 +1,6 @@
 import { AxiosResponse, AxiosInstance } from "axios";
 
-export class HttpRepository {
+class HttpRepository {
   axiosInstance: AxiosInstance;
 
   constructor(axiosInstance: AxiosInstance) {
@@ -29,3 +29,5 @@ export class HttpRepository {
     await this.axiosInstance.delete(url);
   }
 }
+
+export default HttpRepository;

@@ -1,5 +1,6 @@
-import { Card } from "react-bootstrap";
+import { Card, Row } from "react-bootstrap";
 import Post from "../../models/entities/Post";
+import LikeToggle from "../controls/LikeToggle";
 
 interface PostViewProps {
   className?: string | undefined;
@@ -10,13 +11,20 @@ interface PostViewProps {
 const PostView = ({ className, style, post }: PostViewProps) => {
   return (
     <Card className={className} style={style}>
-      <div className="mb-3 fw-light">
+      <Row className="mb-3">
         <div>@{post.author.name}</div>
         <div style={{ fontSize: "0.70em" }}>
           {post.createdAt.toDateString()}
         </div>
-      </div>
-      <p>{post.body}</p>
+      </Row>
+      <Row>
+        <p>{post.body}</p>
+      </Row>
+      <Row>
+        <div>
+          <LikeToggle post={post} />
+        </div>
+      </Row>
     </Card>
   );
 };

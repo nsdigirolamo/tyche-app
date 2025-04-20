@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
-import { PostRepository } from "../repositories/PostRepository";
+import PostRepository from "../repositories/PostRepository";
 import Post from "../models/entities/Post";
-import { UserRepository } from "../repositories/UserRepository";
+import UserRepository from "../repositories/UserRepository";
 
 class PostService {
   userRepository: UserRepository;

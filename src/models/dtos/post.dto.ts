@@ -8,5 +8,6 @@ export interface PostOutput {
   parent_id: string | null;
   author_id: string;
   body: string;
+  like_count: number;
   created_at: string;
 }
