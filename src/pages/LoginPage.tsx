@@ -19,9 +19,10 @@ const LoginPage = () => {
   const handleError = (error: unknown) => {
     if (!error) {
       setErrorMessage("");
-    } else {
-      setIsLoggedIn(false);
+      return;
     }
+
+    setIsLoggedIn(false);
 
     if (isAxiosError(error)) {
       const response = error.response;

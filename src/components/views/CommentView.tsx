@@ -1,15 +1,14 @@
 import { Card, Row } from "react-bootstrap";
 import Post from "../../models/entities/Post";
 import LikeToggle from "../controls/LikeToggle";
-import CommentButton from "../controls/CommentButton";
 
-interface PostViewProps {
+interface CommentViewProps {
   className?: string | undefined;
   style?: React.CSSProperties;
   post: Post;
 }
 
-const PostView = ({ className, style, post }: PostViewProps) => {
+const CommentView = ({ className, style, post }: CommentViewProps) => {
   return (
     <Card className={className} style={style}>
       <Row className="mb-3">
@@ -24,7 +23,6 @@ const PostView = ({ className, style, post }: PostViewProps) => {
       </Row>
       <Row>
         <div>
-          <CommentButton className="me-2" post={post} />
           <LikeToggle post={post} />
         </div>
       </Row>
@@ -32,4 +30,4 @@ const PostView = ({ className, style, post }: PostViewProps) => {
   );
 };
 
-export default PostView;
+export default CommentView;

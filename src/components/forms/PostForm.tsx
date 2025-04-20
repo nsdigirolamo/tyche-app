@@ -10,6 +10,7 @@ import PostService from "../../services/PostsService";
 interface PostFormProps {
   onSubmit?: (post: Post) => void;
   onError?: (error: unknown) => void;
+  parentId?: string;
 }
 
 interface IPostFormInput {
@@ -24,7 +25,7 @@ const PostFormSchema = yup.object({
     .required("Please create a post."),
 });
 
-const PostForm = ({ onSubmit, onError }: PostFormProps) => {
+const PostForm = ({ onSubmit, onError, parentId }: PostFormProps) => {
   const { getAxios } = useLoginContext();
   const {
     formState: { errors },
@@ -40,7 +41,7 @@ const PostForm = ({ onSubmit, onError }: PostFormProps) => {
     setIsLoading(true);
 
     try {
-      const post = await postService.createOne(data.body);
+      const post = await postService.createOne(data.body, parentId);
       if (onSubmit) onSubmit(post);
       if (onError) onError(undefined);
     } catch (error) {
