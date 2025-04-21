@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docker-build": "sudo docker build -t nsdigirolamo/tyche:app .",
+    "docker-push": "sudo docker push nsdigirolamo/tyche:app"
   },
   "lint-staged": {
     "*": [
