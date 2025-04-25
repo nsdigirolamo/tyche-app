@@ -1,0 +1,9 @@
+# Editor Configs
+.vscode
+
+# Generated Files
+dist
+node_modules
+
+# Misc
+Dockerfile

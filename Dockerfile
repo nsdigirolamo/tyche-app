@@ -1,7 +1,18 @@
+FROM node:23-alpine3.20 as builder
+WORKDIR /app
+
+ENV VITE_API_ORIGIN="http://www.tyche.social/api"
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
 FROM nginx:1.27.5
 WORKDIR /usr/share/nginx/html
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./dist ./
+COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist ./
 
 EXPOSE 80
 
