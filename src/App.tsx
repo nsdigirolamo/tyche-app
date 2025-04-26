@@ -14,6 +14,8 @@ function App() {
     <LoginProvider>
       <Container className="mt-5">
         <BrowserRouter>
+          <h1>Tyche</h1>
+          <hr />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="register" element={<RegisterPage />} />

@@ -1,17 +1,7 @@
-import { Row } from "react-bootstrap";
-import { Link } from "react-router";
+import PostsPage from "./PostsPage";
 
 const LandingPage = () => {
-  return (
-    <>
-      <Row>
-        <Link to="/register">Register</Link>
-      </Row>
-      <Row>
-        <Link to="/posts">Posts</Link>
-      </Row>
-    </>
-  );
+  return <PostsPage />;
 };
 
 export default LandingPage;

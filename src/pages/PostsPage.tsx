@@ -57,7 +57,7 @@ const PostsPage = () => {
 
   return (
     <>
-      <h1>Posts</h1>
+      <h2>Posts</h2>
       <Alert hidden={!errorMessage} variant="danger">
         {errorMessage}
       </Alert>

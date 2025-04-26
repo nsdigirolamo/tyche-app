@@ -75,7 +75,7 @@ const CommentsPage = () => {
 
   return parentPost ? (
     <>
-      <h1>Comments</h1>
+      <h2>Comments</h2>
       <Alert hidden={!errorMessage} variant="danger">
         {errorMessage}
       </Alert>

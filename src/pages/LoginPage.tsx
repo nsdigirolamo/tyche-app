@@ -48,7 +48,7 @@ const LoginPage = () => {
     </Alert>
   ) : (
     <>
-      <h1>Login</h1>
+      <h2>Login</h2>
       <LoginForm onSubmit={handleSubmit} onError={handleError} />
       <div className="my-3">
         <span>Don't have an account? </span>

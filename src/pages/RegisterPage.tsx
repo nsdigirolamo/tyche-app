@@ -42,7 +42,7 @@ const RegisterPage = () => {
     </Alert>
   ) : (
     <>
-      <h1>Register</h1>
+      <h2>Register</h2>
       <RegisterForm onSubmit={handleSubmit} onError={handleError} />
       <div className="my-3">
         <span>Already have an account? </span>

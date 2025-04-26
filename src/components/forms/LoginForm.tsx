@@ -70,6 +70,7 @@ const LoginForm = ({ onSubmit, onError }: LoginFormProps) => {
         <Form.Control
           placeholder="Please enter a secure password."
           isInvalid={!!errors.password}
+          type="password"
           {...register("password")}
         />
         <Form.Control.Feedback type="invalid">
