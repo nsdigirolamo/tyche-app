@@ -1,7 +1,7 @@
 FROM node:23-alpine3.20 as builder
 WORKDIR /app
 
-ENV VITE_API_ORIGIN="http://www.tyche.social/api"
+ENV VITE_API_ORIGIN="http://www.tyche.social:8000/api"
 
 COPY package.json package-lock.json ./
 RUN npm install
