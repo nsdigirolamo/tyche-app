@@ -7,7 +7,7 @@ import { useLoginContext } from "../contexts/login-context";
 import LoginForm, { LoginFormInput } from "../components/forms/LoginForm";
 
 const RegisterPage = () => {
-  const { getAxios } = useLoginContext();
+  const { getAxios, setLoginData } = useLoginContext();
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -18,6 +18,8 @@ const RegisterPage = () => {
       setErrorMessage("");
       return;
     }
+
+    setIsRegistered(false);
 
     if (isAxiosError(error)) {
       const response = error.response;
@@ -38,7 +40,11 @@ const RegisterPage = () => {
 
   const handleSubmit = async (formInput: LoginFormInput) => {
     try {
-      await userService.createOne(formInput.username, formInput.password);
+      const loginData = await userService.createOne(
+        formInput.username,
+        formInput.password
+      );
+      setLoginData(loginData);
       setIsRegistered(true);
     } catch (error) {
       handleError(error);
@@ -47,8 +53,8 @@ const RegisterPage = () => {
 
   return isRegistered ? (
     <Alert variant="success">
-      <span>Your account was successfully registered. Please </span>
-      <Link to="/login">click here and log in.</Link>
+      <span>Your account was successfully registered. </span>
+      <Link to="/posts">Click here and get posting!</Link>
     </Alert>
   ) : (
     <>

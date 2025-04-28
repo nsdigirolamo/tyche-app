@@ -1,6 +1,7 @@
 import { AxiosInstance } from "axios";
 import { UserInput, UserOutput } from "../models/dtos/user-dto";
 import HttpRepository from "./HttpRepository";
+import { LoginOutput } from "../models/dtos/login-dto";
 
 const POST_ENDPOINT = `${import.meta.env.VITE_API_ORIGIN}/user`;
 const GET_ENDPOINT = `${import.meta.env.VITE_API_ORIGIN}/users`;
@@ -12,9 +13,9 @@ class UserRepository {
     this.httpRepository = new HttpRepository(axios);
   }
 
-  async createOne(input: UserInput): Promise<UserOutput> {
+  async createOne(input: UserInput): Promise<LoginOutput> {
     const url = `${POST_ENDPOINT}/register`;
-    const { data } = await this.httpRepository.post<UserOutput>(url, input);
+    const { data } = await this.httpRepository.post<LoginOutput>(url, input);
 
     return data;
   }

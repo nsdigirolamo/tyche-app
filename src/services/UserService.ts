@@ -1,6 +1,7 @@
 import { AxiosInstance } from "axios";
 import UserRepository from "../repositories/UserRepository";
 import User from "../models/entities/User";
+import LoginData from "../models/entities/LoginData";
 
 class UserService {
   userRepository: UserRepository;
@@ -9,11 +10,11 @@ class UserService {
     this.userRepository = new UserRepository(axios);
   }
 
-  async createOne(name: string, password: string): Promise<User> {
+  async createOne(name: string, password: string): Promise<LoginData> {
     const output = await this.userRepository.createOne({ name, password });
-    const user = User.fromUserOutput(output);
+    const loginData = LoginData.fromLoginOutput(output);
 
-    return user;
+    return loginData;
   }
 
   async findOneById(id: string): Promise<User> {
