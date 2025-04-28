@@ -2,19 +2,16 @@ import { Link } from "react-router";
 import { Alert } from "react-bootstrap";
 import { isAxiosError } from "axios";
 import { useState } from "react";
-import LoginData from "../models/entities/LoginData";
-import LoginForm from "../components/forms/LoginForm";
+import LoginForm, { LoginFormInput } from "../components/forms/LoginForm";
 import { useLoginContext } from "../contexts/login-context";
+import { LoginService } from "../services/LoginService";
 
 const LoginPage = () => {
-  const { setLoginData } = useLoginContext();
+  const { getAxios, setLoginData } = useLoginContext();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const handleSubmit = (loginData: LoginData) => {
-    setLoginData(loginData);
-    setIsLoggedIn(true);
-  };
+  const loginService = new LoginService(getAxios());
 
   const handleError = (error: unknown) => {
     if (!error) {
@@ -41,6 +38,19 @@ const LoginPage = () => {
     console.log(error);
   };
 
+  const handleSubmit = async (formInput: LoginFormInput) => {
+    try {
+      const loginData = await loginService.login(
+        formInput.username,
+        formInput.password
+      );
+      setLoginData(loginData);
+      setIsLoggedIn(true);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   return isLoggedIn ? (
     <Alert variant="success">
       <span>You are now logged in. </span>
@@ -49,7 +59,11 @@ const LoginPage = () => {
   ) : (
     <>
       <h2>Login</h2>
-      <LoginForm onSubmit={handleSubmit} onError={handleError} />
+      <LoginForm
+        onSubmit={handleSubmit}
+        onError={handleError}
+        submitButtonText="Login"
+      />
       <div className="my-3">
         <span>Don't have an account? </span>
         <Link to="/register">Register here.</Link>

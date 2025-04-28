@@ -2,15 +2,16 @@ import { Link } from "react-router";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { isAxiosError } from "axios";
-import RegisterForm from "../components/forms/RegisterForm";
+import UserService from "../services/UserService";
+import { useLoginContext } from "../contexts/login-context";
+import LoginForm, { LoginFormInput } from "../components/forms/LoginForm";
 
 const RegisterPage = () => {
+  const { getAxios } = useLoginContext();
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const handleSubmit = () => {
-    setIsRegistered(true);
-  };
+  const userService = new UserService(getAxios());
 
   const handleError = (error: unknown) => {
     if (!error) {
@@ -35,6 +36,15 @@ const RegisterPage = () => {
     console.log(error);
   };
 
+  const handleSubmit = async (formInput: LoginFormInput) => {
+    try {
+      await userService.createOne(formInput.username, formInput.password);
+      setIsRegistered(true);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   return isRegistered ? (
     <Alert variant="success">
       <span>Your account was successfully registered. Please </span>
@@ -43,7 +53,11 @@ const RegisterPage = () => {
   ) : (
     <>
       <h2>Register</h2>
-      <RegisterForm onSubmit={handleSubmit} onError={handleError} />
+      <LoginForm
+        onSubmit={handleSubmit}
+        onError={handleError}
+        submitButtonText="Register"
+      />
       <div className="my-3">
         <span>Already have an account? </span>
         <Link to="/login">Login here.</Link>

@@ -2,44 +2,41 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { LoginService } from "../../services/LoginService";
-import LoginData from "../../models/entities/LoginData";
-import { useLoginContext } from "../../contexts/login-context";
 
-interface LoginFormProps {
-  onSubmit: (user: LoginData) => void;
-  onError: (error: unknown) => void;
-}
-
-interface ILoginFormInput {
+export interface LoginFormInput {
   username: string;
   password: string;
+}
+
+interface LoginFormProps {
+  onSubmit: (formInput: LoginFormInput) => void;
+  onError: (error: unknown) => void;
+  submitButtonText?: string;
 }
 
 const LoginFormSchema = yup.object({
   username: yup
     .string()
     .max(16, "A username cannot be longer than 16 characters.")
-    .matches(/^[a-zA-Z0-9_]+$/, "A username must be alphanumeric.")
+    .matches(
+      /^[a-zA-Z0-9_]+$/,
+      "A username must be alphanumeric and cannot contain spaces."
+    )
     .required("A username is required."),
   password: yup.string().required("A password is required."),
 });
 
-const LoginForm = ({ onSubmit, onError }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, onError, submitButtonText }: LoginFormProps) => {
   const {
     formState: { errors },
     handleSubmit,
     register,
     reset,
-  } = useForm<ILoginFormInput>({ resolver: yupResolver(LoginFormSchema) });
-  const { getAxios } = useLoginContext();
+  } = useForm<LoginFormInput>({ resolver: yupResolver(LoginFormSchema) });
 
-  const loginService = new LoginService(getAxios());
-
-  const submitHandler = handleSubmit(async data => {
+  const submitHandler = handleSubmit(data => {
     try {
-      const loginData = await loginService.login(data.username, data.password);
-      onSubmit(loginData);
+      onSubmit(data);
       onError(undefined);
     } catch (error) {
       onError(error);
@@ -78,7 +75,7 @@ const LoginForm = ({ onSubmit, onError }: LoginFormProps) => {
         </Form.Control.Feedback>
       </Form.Group>
       <Button className="me-3" variant="primary" type="submit">
-        Login
+        {submitButtonText ?? "Submit"}
       </Button>
       <Button variant="outline-secondary" onClick={handleResetClick}>
         Reset
