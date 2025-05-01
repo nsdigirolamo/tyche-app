@@ -9,11 +9,11 @@ import { Alert } from "react-bootstrap";
 import PostService from "../services/PostsService";
 
 const PostsPage = () => {
-  const { loginData, getAxios } = useLoginContext();
+  const { axios, loginData } = useLoginContext();
   const [posts, setPosts] = useState<Post[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
+  const postService = useMemo(() => new PostService(axios), [axios]);
 
   const handleSubmit = (post: Post) => {
     setPosts([post, ...posts]);

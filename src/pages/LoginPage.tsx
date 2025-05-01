@@ -1,17 +1,17 @@
 import { Link } from "react-router";
 import { Alert } from "react-bootstrap";
 import { isAxiosError } from "axios";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import LoginForm, { LoginFormInput } from "../components/forms/LoginForm";
 import { useLoginContext } from "../contexts/login-context";
 import { LoginService } from "../services/LoginService";
 
 const LoginPage = () => {
-  const { getAxios, setLoginData } = useLoginContext();
+  const { axios, setLoginData } = useLoginContext();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const loginService = new LoginService(getAxios());
+  const loginService = useMemo(() => new LoginService(axios), [axios]);
 
   const handleError = (error: unknown) => {
     if (!error) {

@@ -8,14 +8,14 @@ import PostsPage from "./pages/PostsPage";
 import LandingPage from "./pages/LandingPage";
 import CommentsPage from "./pages/CommentsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import Header from "./components/Header";
 
 function App() {
   return (
     <LoginProvider>
       <Container className="mt-5">
         <BrowserRouter>
-          <h1>Tyche</h1>
-          <hr />
+          <Header />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="register" element={<RegisterPage />} />

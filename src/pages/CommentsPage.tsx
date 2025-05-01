@@ -13,12 +13,12 @@ type Comment = Post;
 
 const CommentsPage = () => {
   const { postId } = useParams<{ postId: string }>();
-  const { loginData, getAxios } = useLoginContext();
+  const { axios, loginData } = useLoginContext();
   const [parentPost, setParentPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
+  const postService = useMemo(() => new PostService(axios), [axios]);
 
   const handleSubmit = (comment: Comment) => {
     setComments([comment, ...comments]);

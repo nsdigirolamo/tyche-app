@@ -9,15 +9,14 @@ interface LikeToggleProps {
 }
 
 const LikeToggle = ({ post }: LikeToggleProps) => {
-  const { loginData, getAxios } = useLoginContext();
+  const { axios, loginData } = useLoginContext();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(post.likeCount);
 
-  const likeService = useMemo(() => new LikeService(getAxios()), [getAxios]);
+  const likeService = useMemo(() => new LikeService(axios), [axios]);
 
   const handleLikeToggle = async (toggled: boolean) => {
     setIsLiked(toggled);
-
     try {
       await (toggled
         ? likeService.createOne(post.id)

@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap";
 import { useLoginContext } from "../../contexts/login-context";
 import Post from "../../models/entities/Post";
 import PostService from "../../services/PostsService";
+import { useMemo } from "react";
 
 interface PostFormProps {
   onSubmit: (post: Post) => void;
@@ -31,9 +32,9 @@ const PostForm = ({ onSubmit, onError, parentId }: PostFormProps) => {
     register,
     reset,
   } = useForm<IPostFormInput>({ resolver: yupResolver(PostFormSchema) });
-  const { getAxios } = useLoginContext();
+  const { axios } = useLoginContext();
 
-  const postService = new PostService(getAxios());
+  const postService = useMemo(() => new PostService(axios), [axios]);
 
   const submitHandler = handleSubmit(async data => {
     try {

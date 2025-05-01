@@ -11,8 +11,8 @@ interface CommentButtonProps {
 }
 
 const CommentButton = ({ className, post }: CommentButtonProps) => {
-  const { getAxios } = useLoginContext();
-  const postService = useMemo(() => new PostService(getAxios()), [getAxios]);
+  const { axios } = useLoginContext();
+  const postService = useMemo(() => new PostService(axios), [axios]);
   const [commentCount, setCommentCount] = useState<number>(0);
   const navigate = useNavigate();
 

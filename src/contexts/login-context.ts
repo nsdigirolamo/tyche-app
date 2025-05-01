@@ -3,11 +3,11 @@ import ILoginContext from "../models/contexts/login-context-interface";
 import axios from "axios";
 
 export const LoginContext = createContext<ILoginContext>({
+  axios: axios.create(),
   loginData: null,
   setLoginData: () => {
     return;
   },
-  getAxios: () => axios.create(),
 });
 
 export const useLoginContext = () => use(LoginContext);
